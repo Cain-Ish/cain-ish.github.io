@@ -1,20 +1,3 @@
-// 19:50 polnoc
-// 19:57 środek nocy
-// 20:20 Nad ranem + brama otwarta
-// 20:44 > Sklep slums
-// 20:47 > Sklep miasto
-// 20:51 Poranek
-// 21:21 Południe
-// 21:28 Wczesne popołudnie
-// 21:48 > Resupply
-// 21:51 Późne popołudnie
-// 22:xx wieczór(?)
-// 22:21 Późny wieczór
-// 22:36 > sklep close + brama
-// 22:51 Polnoc
-// 22:57 Środek Nocy
-// 23:20 Nad ranem
-
 const setTimeoutSecondsLeft = new Date().getSeconds() * 1000;
 const deSyncMinutes = 40; //Minutes to add/take to have full hour like 20:00
 
@@ -34,10 +17,9 @@ const dayTimeline = {
 	61: { name: 'Południe' }, //1:01
 	68: { name: 'Wczesne popołudnie' }, //1:08
 	88: { resupply: true }, //1:28
-	68: { name: 'Wczesne popołudnie' }, //1:31
-	//0: { name: 'Wczesny wieczór' }, // ???
+	98: { name: 'Późne popołudnie' }, //1:31
 	121: { name: 'Późny wieczór' }, //2:01
-	136: { shop_slums: false, shop_city: false, gate: false },
+	136: { shop_slums: false, shop_city: false, gate: false }, //2:16
 	151: { name: 'Połnoc' }, //2:31
 	157: { name: 'Środek nocy' }, //2:37
 };
@@ -50,7 +32,6 @@ function calcHours(hourPast, minutes) {
 }
 
 function dayCycle() {
-	console.log('dayCycle');
 	const currentTime = new Date();
 	let desyncTime = new Date();
 	desyncTime.setMinutes(desyncTime.getMinutes() + deSyncMinutes);
@@ -88,13 +69,11 @@ function dayCycle() {
 }
 
 function TimerInvterval() {
-	console.log('setInterval');
 	setInterval(dayCycle, 60000);
 }
 
 // Run script every full minute pass
 setTimeout(function() {
-	console.log('setTimeout');
 	TimerInvterval();
 }, 60000 - setTimeoutSecondsLeft);
 
