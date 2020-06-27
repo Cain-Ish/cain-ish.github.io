@@ -50,6 +50,7 @@ function calcHours(hourPast, minutes) {
 }
 
 function dayCycle() {
+	console.log('dayCycle');
 	const currentTime = new Date();
 	let desyncTime = new Date();
 	desyncTime.setMinutes(desyncTime.getMinutes() + deSyncMinutes);
@@ -87,12 +88,14 @@ function dayCycle() {
 }
 
 function TimerInvterval() {
+	console.log('setInterval');
 	setInterval(dayCycle, 60000);
 }
 
 // Run script every full minute pass
 setTimeout(function() {
+	console.log('setTimeout');
 	TimerInvterval();
-}, 10000 - setTimeoutSecondsLeft);
+}, 60000 - setTimeoutSecondsLeft);
 
 dayCycle();
