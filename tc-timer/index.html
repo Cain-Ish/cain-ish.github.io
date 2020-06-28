@@ -3,25 +3,36 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8">
   <title>TC - Timer</title>
+  <link rel="stylesheet" href="./mvp.css">
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 </head>
 
 <body>
-  <section style="margin-bottom: 20px;">
-    <div><small>Desync - różnica między planowanym restartem ("Nad ranem") o 3:00, 6:00, 9:00, etc. a
-        prawdziwym</small></div>
-    <label for="deSyncMinutes">Desync</label>
-    <input type="number" onchange="deSyncMinutesManual()" id="deSyncMinutes"></input>
-    <div id="timeRestartStarted"></span>
-  </section>
-  <section>
-    <div id="currentTime"></div>
-    <div id="ingameDate"></div>
-    <div id="name"></div>
-    <ul id="timeline"></ul>
-  </section>
+  <header>
+    <article>
+
+    </article>
+    <article>
+      <form>
+        <label for="deSyncMinutes">Desync<small> - różnica między planowanym restartem ("Nad ranem") o 3:00, 6:00, 9:00,
+            etc. a prawdziwym</small></label>
+        <input type="number" onchange="deSyncMinutesManual()" id="deSyncMinutes"></input>
+        <div id="timeRestartStarted"></div>
+      </form>
+    </article>
+  </header>
+  <main>
+    <article>
+      <div id="currentTime"></div>
+      <div id="ingameDate"></div>
+      <div id="name"></div>
+      <ul id="timeline"></ul>
+    </article>
+  </main>
   <script src="timer.js"></script>
 </body>
 
