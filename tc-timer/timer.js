@@ -1,6 +1,8 @@
 const setTimeoutSecondsLeft = new Date().getSeconds() * 1000;
 let deSyncMinutes = -50; //Minutes to add/take to have full hour like 20:00
 let timeRestartStarted;
+let hourPart = 0;
+let desyncTime = new Date();
 
 const dayTimeline = {
 	0: { name: 'Nad ranem', gate: true }, //0:00
@@ -22,9 +24,9 @@ function fillText(id, text) {
 	document.getElementById(id).innerHTML = text;
 }
 
-function fillList(text) {
+function fillList(text, passed) {
 	let li = document.createElement('li');
-	li.innerHTML = text;
+	li.innerHTML = passed ? `${text} <small>(nowy dzień)</small>` : `<b>${text}</b>`;
 	document.getElementById('timeline').appendChild(li);
 }
 
@@ -34,25 +36,29 @@ function deSyncMinutesManual() {
 	dayCycle();
 }
 
-function calcHours(date, hourPast, minutes) {
-	let countDate = new Date(date.getTime());
-	countDate.setHours(countDate.getHours() - Number(hourPast));
+function calcHours(date) {
+	return ('00' + date.getHours()).slice(-2) + ':' + ('00' + date.getMinutes()).slice(-2);
+}
+
+function calcTimelineHours(minutes) {
+	let countDate = new Date(desyncTime.getTime());
+	countDate.setHours(countDate.getHours() - Number(hourPart));
 	countDate.setMinutes(countDate.getMinutes() + Number(minutes));
-	return ('00' + countDate.getHours()).slice(-2) + ':' + ('00' + countDate.getMinutes()).slice(-2);
+	return calcHours(countDate);
 }
 
 function dayCycle() {
 	const currentTime = new Date();
-	let desyncTime = new Date();
-	timeRestartStarted = new Date();
+	desyncTime = new Date();
 	desyncTime.setMinutes(desyncTime.getMinutes() - deSyncMinutes);
 	const currentHour = desyncTime.getHours();
 	const currentMintes = desyncTime.getMinutes();
 	const ingameDate = Math.floor(desyncTime.getHours() / 3) + 1;
 	let ingameDayPart = 'Nad ranem';
-	const hourPart = currentHour % 3;
+	hourPart = currentHour % 3;
 	const timeCheck = hourPart * 60 + currentMintes;
 
+	timeRestartStarted = new Date();
 	timeRestartStarted = desyncTime;
 	timeRestartStarted.setMinutes(0 - hourPart * 60 + deSyncMinutes);
 
@@ -63,58 +69,26 @@ function dayCycle() {
 	}
 
 	for (const [ key, value ] of Object.entries(dayTimeline)) {
-		if (timeCheck > Number(key)) {
-			if (value.name) {
-				ingameDayPart = value.name;
-				fillList(`<i>${value.name}: ${calcHours(desyncTime, hourPart, Number(key) + 180)}</i>`);
-			}
-			if (value.gate !== undefined && value.gate)
-				fillList(`Brama otwarta: ${calcHours(desyncTime, hourPart, Number(key) + 180)}`);
-			if (value.gate !== undefined && !value.gate)
-				fillList(`Brama zamknięta: ${calcHours(desyncTime, hourPart, Number(key) + 180)}`);
-			if (value.shop_slums !== undefined && value.shop_slums)
-				fillList(`Sklepy (slumsy) otwarte: ${calcHours(desyncTime, hourPart, Number(key) + 180)}`);
-			if (value.shop_slums !== undefined && !value.shop_slums)
-				fillList(`Sklepy (slumsy) zamknięte: ${calcHours(desyncTime, hourPart, Number(key) + 180)}`);
-			if (value.shop_city !== undefined && value.shop_city)
-				fillList(`Sklepy (miasto) otwarte: ${calcHours(desyncTime, hourPart, Number(key) + 180)}`);
-			if (value.shop_city !== undefined && !value.shop_city)
-				fillList(`Sklepy (miasto) zamknięte: ${calcHours(desyncTime, hourPart, Number(key) + 180)}`);
-			if (value.resupply_slums)
-				fillList(`Sklepy(slumsy) dostawa: ${calcHours(desyncTime, hourPart, Number(key) + 180)}`);
-			if (value.resupply_city)
-				fillList(`Sklepy(miasto) dostawa: ${calcHours(desyncTime, hourPart, Number(key) + 180)}`);
-		} else {
-			if (value.name) fillList(`<b><i>${value.name}: ${calcHours(desyncTime, hourPart, key)}</i></b>`);
-			if (value.gate !== undefined && value.gate)
-				fillList(`<b>Brama otwarta: ${calcHours(desyncTime, hourPart, Number(key))}</b>`);
-			if (value.gate !== undefined && !value.gate)
-				fillList(`<b>Brama zamknięta: ${calcHours(desyncTime, hourPart, Number(key))}</b>`);
-			if (value.shop_slums !== undefined && value.shop_slums)
-				fillList(`<b>Sklepy (slumsy) otwarte: ${calcHours(desyncTime, hourPart, Number(key))}</b>`);
-			if (value.shop_slums !== undefined && !value.shop_slums)
-				fillList(`<b>Sklepy (slumsy) zamknięte: ${calcHours(desyncTime, hourPart, Number(key))}</b>`);
-			if (value.shop_city !== undefined && value.shop_city)
-				fillList(`<b>Sklepy (miasto) otwarte: ${calcHours(desyncTime, hourPart, Number(key))}</b>`);
-			if (value.shop_city !== undefined && !value.shop_city)
-				fillList(`<b>Sklepy (miasto) zamknięte: ${calcHours(desyncTime, hourPart, Number(key))}</b>`);
-			if (value.resupply_slums)
-				fillList(`<b>Sklepy(slumsy) dostawa: ${calcHours(desyncTime, hourPart, Number(key))}</b>`);
-			if (value.resupply_city)
-				fillList(`<b>Sklepy(miasto) dostawa: ${calcHours(desyncTime, hourPart, Number(key))}</b>`);
-		}
+		let check = timeCheck > Number(key);
+		let time = Number(key) + (check ? 180 : 0);
+		if (check && value.name) ingameDayPart = value.name;
+		if (value.name) fillList(`<i>${value.name}: ${calcTimelineHours(time)}</i>`, check);
+		if (value.gate !== undefined && value.gate) fillList(`Brama otwarta: ${calcTimelineHours(time)}`, check);
+		if (value.gate !== undefined && !value.gate) fillList(`Brama zamknięta: ${calcTimelineHours(time)}`, check);
+		if (value.shop_slums !== undefined && value.shop_slums)
+			fillList(`Sklepy (slumsy) otwarte: ${calcTimelineHours(time)}`, check);
+		if (value.shop_slums !== undefined && !value.shop_slums)
+			fillList(`Sklepy (slumsy) zamknięte: ${calcTimelineHours(time)}`, check);
+		if (value.shop_city !== undefined && value.shop_city)
+			fillList(`Sklepy (miasto) otwarte: ${calcTimelineHours(time)}`, check);
+		if (value.shop_city !== undefined && !value.shop_city)
+			fillList(`Sklepy (miasto) zamknięte: ${calcTimelineHours(time)}`, check);
+		if (value.resupply_slums) fillList(`Sklepy(slumsy) dostawa: ${calcTimelineHours(time)}`, check);
+		if (value.resupply_city) fillList(`Sklepy(miasto) dostawa: ${calcTimelineHours(time)}`, check);
 	}
 
-	fillText(
-		'currentTime',
-		`<b>Godzina: ${('00' + currentTime.getHours()).slice(-2)}:${('00' + currentTime.getMinutes()).slice(-2)}</b>`,
-	);
-
-	fillText(
-		'timeRestartStarted',
-		`<b>Nad ranem było o ${('00' + timeRestartStarted.getHours()).slice(-2)}:${('00' +
-			timeRestartStarted.getMinutes()).slice(-2)}</b>`,
-	);
+	fillText('currentTime', `<b>Godzina: ${calcHours(currentTime)}</b>`);
+	fillText('timeRestartStarted', `<b>Nad ranem było o ${calcHours(timeRestartStarted)}</b>`);
 	fillText('ingameDate', `<b>Dzień:</b> ${ingameDate}`);
 	fillText('name', `<b>Pora:</b> ${ingameDayPart}`);
 }
