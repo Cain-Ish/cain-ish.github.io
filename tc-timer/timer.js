@@ -42,7 +42,7 @@ function calcHours(date) {
 
 function calcTimelineHours(minutes) {
 	let countDate = new Date(desyncTime.getTime());
-	countDate.setHours(countDate.getHours() - Number(hourPart));
+	// countDate.setHours(countDate.getHours() - Number(hourPart));
 	countDate.setMinutes(countDate.getMinutes() + Number(minutes));
 	return calcHours(countDate);
 }
