@@ -1,5 +1,5 @@
 const setTimeoutSecondsLeft = new Date().getSeconds() * 1000;
-let deSyncMinutes = -50; //Minutes to add/take to have full hour like 20:00
+let deSyncMinutes = -39; //Minutes to add/take to have full hour like 20:00
 let timeRestartStarted;
 let hourPart = 0;
 let desyncTime = new Date();
