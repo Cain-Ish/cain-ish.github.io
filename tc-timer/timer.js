@@ -46,11 +46,11 @@ function deSyncMinutesManual() {
 	deSyncMinutes = Number(document.getElementById('deSyncMinutes').value);
 	localStorage.setItem('TC-Timer', JSON.stringify({ minutes: deSyncMinutes, date: date.getTime() }));
 	dayCycle();
-	ga('send', 'event', {
-		eventCategory: 'deSyncMinutes',
-		eventAction: 'changed',
-		eventValue: deSyncMinutes.toString,
-	});
+	// ga('send', 'event', {
+	// 	eventCategory: 'deSyncMinutes',
+	// 	eventAction: 'changed',
+	// 	eventValue: deSyncMinutes.toString,
+	// });
 }
 
 function calcHours(date) {
