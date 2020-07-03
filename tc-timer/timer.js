@@ -1,6 +1,6 @@
 const setTimeoutSecondsLeft = new Date().getSeconds() * 1000;
-let deSyncMinutes = -40; //Minutes to add/take to have full hour like 20:00
-const deSyncGeneratedDate = 1593789125766;
+let deSyncMinutes = -47; //Minutes to add/take to have full hour like 20:00
+const deSyncGeneratedDate = 1593806064613;
 let timeRestartStarted;
 let hourPart = 0;
 let desyncTime = new Date();
@@ -46,11 +46,11 @@ function deSyncMinutesManual() {
 	deSyncMinutes = Number(document.getElementById('deSyncMinutes').value);
 	localStorage.setItem('TC-Timer', JSON.stringify({ minutes: deSyncMinutes, date: date.getTime() }));
 	dayCycle();
-	 gtag('event', 'deSync Changed', {
-	 	event_category: 'deSyncMinutes',
-	 	event_label: 'changed',
-	 	value: Number(deSyncMinutes) <= 0? Math.abs(Number(deSyncMinutes)/100) : 1+(Number(deSyncMinutes)/100),
-	 });
+	gtag('event', 'deSync Changed', {
+		event_category: 'deSyncMinutes',
+		event_label: 'changed',
+		value: Number(deSyncMinutes) <= 0 ? Math.abs(Number(deSyncMinutes) / 100) : 1 + Number(deSyncMinutes) / 100,
+	});
 }
 
 function calcHours(date) {
