@@ -1,5 +1,6 @@
 const setTimeoutSecondsLeft = new Date().getSeconds() * 1000;
-let deSyncMinutes = -39; //Minutes to add/take to have full hour like 20:00
+let deSyncMinutes = -40; //Minutes to add/take to have full hour like 20:00
+const deSyncGeneratedDate = 1593789125766;
 let timeRestartStarted;
 let hourPart = 0;
 let desyncTime = new Date();
@@ -30,10 +31,26 @@ function fillList(text, passed) {
 	document.getElementById('timeline').appendChild(li);
 }
 
-document.getElementById('deSyncMinutes').value = deSyncMinutes;
+function localstoreMinutes() {
+	const saved = JSON.parse(localStorage.getItem('TC-Timer'));
+	if (saved && saved.date > deSyncGeneratedDate) {
+		document.getElementById('deSyncMinutes').value = saved.minutes;
+	} else {
+		document.getElementById('deSyncMinutes').value = deSyncMinutes;
+		localStorage.setItem('TC-Timer', JSON.stringify({ minutes: deSyncMinutes, date: deSyncGeneratedDate }));
+	}
+}
+
 function deSyncMinutesManual() {
+	const date = new Date();
 	deSyncMinutes = Number(document.getElementById('deSyncMinutes').value);
+	localStorage.setItem('TC-Timer', JSON.stringify({ minutes: deSyncMinutes, date: date.getTime() }));
 	dayCycle();
+	ga('send', 'event', {
+		eventCategory: 'deSyncMinutes',
+		eventAction: 'changed',
+		eventValue: deSyncMinutes.toString,
+	});
 }
 
 function calcHours(date) {
@@ -102,4 +119,5 @@ setTimeout(function() {
 	TimerInvterval();
 }, 60000 - setTimeoutSecondsLeft);
 
+localstoreMinutes();
 dayCycle();
