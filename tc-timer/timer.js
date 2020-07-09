@@ -9,14 +9,16 @@ const dayTimeline = {
 	0: { name: 'Nad ranem', gate: true }, //0:00
 	24: { shop_slums: true }, //0:24
 	27: { shop_city: true }, //0:27
+	29: { shop_dock: true }, //0:27
 	31: { name: 'Poranek' }, //0:31
 	61: { name: 'Południe' }, //1:01
 	68: { name: 'Wczesne popołudnie' }, //1:08
 	84: { resupply_slums: true }, //1:24
-	87: { resupply_city: true }, //1:27
+	87: { resupply_city: true }, //1:27giy
+	89: { resupply_dock: true }, //1:29
 	98: { name: 'Późne popołudnie' }, //1:31
 	121: { name: 'Późny wieczór' }, //2:01
-	136: { shop_slums: false, shop_city: false, gate: false }, //2:16
+	136: { shop_slums: false, shop_city: false, shop_dock: false, gate: false }, //2:16
 	151: { name: 'Połnoc' }, //2:31
 	157: { name: 'Środek nocy' }, //2:37
 };
@@ -100,8 +102,13 @@ function dayCycle() {
 			fillList(`Sklepy (miasto) otwarte: ${calcTimelineHours(time)}`, check);
 		if (value.shop_city !== undefined && !value.shop_city)
 			fillList(`Sklepy (miasto) zamknięte: ${calcTimelineHours(time)}`, check);
+		if (value.shop_dock !== undefined && value.shop_dock)
+			fillList(`Sklepy (doki) otwarte: ${calcTimelineHours(time)}`, check);
+		if (value.shop_dock !== undefined && !value.shop_dock)
+			fillList(`Sklepy (doki) zamknięte: ${calcTimelineHours(time)}`, check);
 		if (value.resupply_slums) fillList(`Sklepy(slumsy) dostawa: ${calcTimelineHours(time)}`, check);
 		if (value.resupply_city) fillList(`Sklepy(miasto) dostawa: ${calcTimelineHours(time)}`, check);
+		if (value.resupply_dock) fillList(`Sklepy(docki) dostawa: ${calcTimelineHours(time)}`, check);
 	}
 
 	fillText('currentTime', `<b>Godzina: ${calcHours(currentTime)}</b>`);
