@@ -1,6 +1,6 @@
 const setTimeoutSecondsLeft = new Date().getSeconds() * 1000;
-let deSyncMinutes = -41; //Minutes to add/take to have full hour like 20:00
-const deSyncGeneratedDate = 1594921883382;
+let deSyncMinutes = -40; //Minutes to add/take to have full hour like 20:00
+const deSyncGeneratedDate = 1601683139144;
 let timeRestartStarted;
 let hourPart = 0;
 let desyncTime = new Date();
